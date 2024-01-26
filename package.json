@@ -1,0 +1,34 @@
+{
+  "name": "start_project_2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "set DEBUG=app:main && nodemon server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "auto-bind-inheritance": "^1.0.6",
+    "bcryptjs": "^2.4.3",
+    "config": "^3.3.9",
+    "debug": "^4.3.4",
+    "express": "^4.18.2",
+    "express-async-errors": "^3.1.1",
+    "express-validator": "^7.0.1",
+    "jsonwebtoken": "^9.0.2",
+    "mkdirp": "^3.0.1",
+    "mongoose": "^8.0.3",
+    "mongoose-timestamp": "^0.6.0",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
+    "passport": "^0.7.0",
+    "passport-local": "^1.0.0",
+    "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "jshint": "^2.13.6"
+  }
+}
