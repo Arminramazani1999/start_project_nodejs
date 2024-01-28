@@ -104,10 +104,16 @@ class AuthController extends controller {
         message: "سفارشی وجود ندارد",
       });
     }
-    order = await this.Order.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true,
-    });
+    order = await this.Order.findByIdAndUpdate(
+      req.params.id,
+      {
+        status: req.body.status,
+      },
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
     this.respons({
       res,
       message: "سفارش بروز شد",
