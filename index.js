@@ -7,7 +7,7 @@ const debug = require("debug")("app:main");
 const config = require("config");
 const router = require("./src/routes");
 
-app.set(express.json());
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname + "/public"));
 

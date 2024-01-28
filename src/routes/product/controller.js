@@ -55,8 +55,10 @@ class AuthController extends controller {
     // let product = await this.Product.find().populate('Category').sort({'dateOrdered'})
 
     let product = await this.Product.find({
-      name: { $regex: search, $options: "i" },
-    }).populate('category').sort('dateOrdered')
+      title: { $regex: search, $options: "i" },
+    })
+      .populate("category")
+      .sort({"createdAt" : -1})
       .skip((pageNumber - 1) * pageSize)
       .limit(pageSize);
 

@@ -8,15 +8,6 @@ const uploadImages = require("../../upload/uploadImages");
 // create
 router.post(
   "/create",
-  uploadImages.single("img"),
-  (req, res, next) => {
-    if (!req.file) {
-      req.body.img = null;
-    } else {
-      req.body.img = req.file.filename;
-    }
-    next();
-  },
   validator.create(),
   controller.validate,
   controller.create
