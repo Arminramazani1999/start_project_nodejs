@@ -110,6 +110,7 @@ class AuthController extends controller {
       data: { order },
     });
   }
+  // get totalsales
   async getTotalSales(req, res) {
     const totalSales = await this.Order.aggregate([
       { $group: { _id: null, totalsales: { $sum: "$totalPrice" } } },
@@ -123,6 +124,20 @@ class AuthController extends controller {
     }
     res.send({
       totalsales: totalSales.pop().totalsales,
+    });
+  }
+  // get count
+  async getCount(req, res) {
+    const orderCount = await this.Order.countDocuments((count) => count);
+    if (!orderCount) {
+      this.respons({
+        res,
+        code: 500,
+        message: " سفارشی وجود ندارد",
+      });
+    }
+    res.send({
+      orderCount: orderCount,
     });
   }
 

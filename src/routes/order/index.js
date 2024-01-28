@@ -18,6 +18,8 @@ router.delete("/:id", controller.delete);
 router.put("/:id", controller.update);
 // totalsales
 router.get("/get/totalsales", controller.getTotalSales);
+// count
+router.get("/get/count", controller.getCount);
 
 //--------all_user------
 // all
