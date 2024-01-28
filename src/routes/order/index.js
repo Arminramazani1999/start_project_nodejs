@@ -16,6 +16,8 @@ router.post(
 router.delete("/:id", controller.delete);
 // update
 router.put("/:id", controller.update);
+// totalsales
+router.get("/get/totalsales", controller.getTotalSales);
 
 //--------all_user------
 // all

@@ -110,6 +110,23 @@ class AuthController extends controller {
       data: { order },
     });
   }
+  async getTotalSales(req, res) {
+    const totalSales = await this.Order.aggregate([
+      { $group: { _id: null, totalsales: { $sum: "$totalPrice" } } },
+    ]);
+    if (!totalSales) {
+      this.respons({
+        res,
+        code: 400,
+        message: "The order sales connot be generated",
+      });
+    }
+    res.send({
+      totalsales: totalSales.pop().totalsales,
+    });
+  }
+
+  
   //update
   async update(req, res) {
     let order = await this.Order.findById(req.params.id);
