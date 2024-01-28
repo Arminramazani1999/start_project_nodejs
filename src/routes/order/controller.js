@@ -140,8 +140,28 @@ class AuthController extends controller {
       orderCount: orderCount,
     });
   }
+  // get user orders
+  async getUserOrders(req, res) {
+    const userOrderList = await this.Order.find({ user: req.params.id })
+      .populate([
+        {
+          path: "orderItems",
+          populate: { path: "product", populate: "category" },
+        },
+      ])
+      .sort({ dateOrdered: -1 });
+    if (!userOrderList) {
+      this.respons({
+        res,
+        code: 500,
+        message: " سفارشی وجود ندارد",
+      });
+    }
+    res.send({
+      userOrderList: userOrderList,
+    });
+  }
 
-  
   //update
   async update(req, res) {
     let order = await this.Order.findById(req.params.id);

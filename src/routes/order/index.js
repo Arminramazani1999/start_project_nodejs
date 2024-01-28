@@ -20,6 +20,8 @@ router.put("/:id", controller.update);
 router.get("/get/totalsales", controller.getTotalSales);
 // count
 router.get("/get/count", controller.getCount);
+  // get user order
+  router.get("/get/userorders/:id", controller.getUserOrders);
 
 //--------all_user------
 // all
