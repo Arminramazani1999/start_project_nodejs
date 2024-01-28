@@ -87,7 +87,13 @@ class AuthController extends controller {
         message: "سفارشی وجود ندارد",
       });
     }
-    order = await this.Order.findByIdAndDelete(req.params.id);
+    order = await this.Order.findByIdAndDelete(req.params.id).then(
+      async (order) => {
+        await order.orderItem.map(async (orderItem) => {
+          await this.OrderItem.findByIdAndDelete(orderItem);
+        });
+      }
+    );
     this.respons({
       res,
       message: " سفارش حذف شد",
