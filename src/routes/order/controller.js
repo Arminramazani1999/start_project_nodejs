@@ -16,7 +16,17 @@ class AuthController extends controller {
     );
 
     const orderItemsIdsResolved = await orderItemIds;
-
+    const totalPrices = Promise.all(
+      orderItemsIdsResolved.map(async (orderItemId) => {
+        const orderItem = await this.OrderItem.findById(orderItemId).populate(
+          "product",
+          "price"
+        );
+        const totalPrice = orderItem.product.price * orderItem.quantity;
+        return totalPrice;
+      })
+    );
+    const totalPrice = (await totalPrices).reduce((a, b) => a + b, 0);
     order = new this.Order({
       orderItem: orderItemsIdsResolved,
       shippingAddress1: req.body.shippingAddress1,
@@ -25,7 +35,7 @@ class AuthController extends controller {
       phone: req.body.phone,
       zip: req.body.zip,
       status: req.body.status,
-      totalPrice: req.body.totalPrice,
+      totalPrice: totalPrice,
       user: req.body.user,
     });
 
