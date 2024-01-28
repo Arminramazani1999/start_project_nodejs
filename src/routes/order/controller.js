@@ -4,7 +4,6 @@ const { validationResult } = require("express-validator");
 class AuthController extends controller {
   // create
   async create(req, res) {
-
     const orderItemIds = Promise.all(
       req.body.orderItem.map(async (orderItem) => {
         let newOrderItem = new this.OrderItem({
@@ -33,29 +32,43 @@ class AuthController extends controller {
     await order.save();
     this.respons({
       res,
-      message: "با موفقیت ثبت نام شد",
+      message: "با موفقیت ثبت شد",
       data: order,
     });
   }
   // show all
   async getAll(req, res) {
-    let order = await this.Order.find({})
-      .populate(["user", {path: "orderItems",  populate : "product"}])
+    let orderList = await this.Order.find({})
+      .populate(["user", { path: "orderItems", populate: "product" }])
       .sort({ dateOrdered: -1 });
+    if (!orderList) {
+      this.respons({
+        res,
+        code: 404,
+        message: "سفارشی وجود ندارد",
+      });
+    }
+
     this.respons({
       res,
       message: "All:",
-      data: { order },
+      data: { orderList },
     });
   }
-  // see one
+  // detaile
   async seeOne(req, res) {
-    let order = await this.Order.findById(req.params.id);
+    let order = await this.Order.findById(req.params.id).populate([
+      "user",
+      {
+        path: "orderItems",
+        populate: { path: "product", populate: "category" },
+      },
+    ]);
     if (!order) {
       this.respons({
         res,
         code: 404,
-        message: "دسته بندی وجود ندارد",
+        message: "سفارشی وجود ندارد",
       });
     }
     this.respons({
@@ -71,13 +84,13 @@ class AuthController extends controller {
       this.respons({
         res,
         code: 404,
-        message: "دسته بندی وجود ندارد",
+        message: "سفارشی وجود ندارد",
       });
     }
     order = await this.Order.findByIdAndDelete(req.params.id);
     this.respons({
       res,
-      message: "دسته بندی حذف شد",
+      message: " سفارش حذف شد",
       data: { order },
     });
   }
@@ -88,7 +101,7 @@ class AuthController extends controller {
       this.respons({
         res,
         code: 404,
-        message: "دسته بندی وجود ندارد",
+        message: "سفارشی وجود ندارد",
       });
     }
     order = await this.Order.findByIdAndUpdate(req.params.id, req.body, {
@@ -97,7 +110,7 @@ class AuthController extends controller {
     });
     this.respons({
       res,
-      message: "دسته بندی حذف شد",
+      message: "سفارش بروز شد",
       data: { order },
     });
   }
