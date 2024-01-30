@@ -14,7 +14,7 @@ router.use("/user", isLoggined, userRouter);
 router.use("/admin", isLoggined, isAdmin, adminRouter);
 router.use("/category", categoryRouter);
 router.use("/product", productRouter);
-router.use("/order", orderRouter);
+router.use("/order", isLoggined, orderRouter);
 
 router.use(error);
 

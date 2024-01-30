@@ -1,14 +1,16 @@
 const controller = require("./../contriller");
+const path = require("path");
 // const User = require("models/user");
 const { validationResult } = require("express-validator");
 class AuthController extends controller {
   // create
   async create(req, res) {
+    // console.log(req.body);
     const orderItemIds = Promise.all(
       req.body.orderItem.map(async (orderItem) => {
         let newOrderItem = new this.OrderItem({
-          quantity: orderIten.quantity,
-          product: orderIten.product,
+          quantity: orderItem.quantity,
+          product: orderItem.product,
         });
         newOrderItem = await newOrderItem.save();
         return newOrderItem._id;
@@ -19,15 +21,18 @@ class AuthController extends controller {
     const totalPrices = Promise.all(
       orderItemsIdsResolved.map(async (orderItemId) => {
         const orderItem = await this.OrderItem.findById(orderItemId).populate(
-          "product",
-          "price"
+          "product"
         );
         const totalPrice = orderItem.product.price * orderItem.quantity;
+
+        let constInStock = orderItem.product.constInStock;
+        console.log("constInStock = ", constInStock);
         return totalPrice;
       })
     );
     const totalPrice = (await totalPrices).reduce((a, b) => a + b, 0);
-    order = new this.Order({
+
+    const order = new this.Order({
       orderItem: orderItemsIdsResolved,
       shippingAddress1: req.body.shippingAddress1,
       shippingAddress2: req.body.shippingAddress2,
@@ -38,8 +43,10 @@ class AuthController extends controller {
       totalPrice: totalPrice,
       user: req.body.user,
     });
-
+    console.log("oooooooooooooooooooooooooooooooooooooooooo");
     await order.save();
+    console.log(order);
+
     this.respons({
       res,
       message: "با موفقیت ثبت شد",
@@ -49,7 +56,8 @@ class AuthController extends controller {
   // show all
   async getAll(req, res) {
     let orderList = await this.Order.find({})
-      .populate(["user", { path: "orderItems", populate: "product" }])
+      .populate("user", "name")
+      .populate({path: "orderItems", populate: "product"})
       .sort({ dateOrdered: -1 });
     if (!orderList) {
       this.respons({
