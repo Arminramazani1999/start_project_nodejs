@@ -6,11 +6,7 @@ const uploadImages = require("../../upload/uploadImages");
 
 //----------admin---------
 // create
-router.post(
-  "/create",
-  controller.validate,
-  controller.create
-);
+router.post("/create", controller.validate, controller.create);
 // delete
 router.delete("/:id", controller.delete);
 // update
@@ -27,7 +23,5 @@ router.get("/get/userorders/:id", controller.getUserOrders);
 router.get("/", controller.getAll);
 // see one
 router.get("/:id", controller.seeOne);
-
-
 
 module.exports = router;

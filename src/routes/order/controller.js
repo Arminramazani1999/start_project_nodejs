@@ -57,7 +57,7 @@ class AuthController extends controller {
   async getAll(req, res) {
     let orderList = await this.Order.find({})
       .populate("user", "name")
-      .populate({path: "orderItems", populate: "product"})
+      .populate({ path: "orderItem", populate: "product" })
       .sort({ dateOrdered: -1 });
     if (!orderList) {
       this.respons({
@@ -78,7 +78,7 @@ class AuthController extends controller {
     let order = await this.Order.findById(req.params.id).populate([
       "user",
       {
-        path: "orderItems",
+        path: "orderItem",
         populate: { path: "product", populate: "category" },
       },
     ]);
@@ -136,7 +136,7 @@ class AuthController extends controller {
   }
   // get count
   async getCount(req, res) {
-    const orderCount = await this.Order.countDocuments((count) => count);
+    const orderCount = await this.Order.countDocuments((count) => count)
     if (!orderCount) {
       this.respons({
         res,
@@ -153,7 +153,7 @@ class AuthController extends controller {
     const userOrderList = await this.Order.find({ user: req.params.id })
       .populate([
         {
-          path: "orderItems",
+          path: "orderItem",
           populate: { path: "product", populate: "category" },
         },
       ])
