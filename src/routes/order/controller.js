@@ -136,7 +136,7 @@ class AuthController extends controller {
   }
   // get count
   async getCount(req, res) {
-    const orderCount = await this.Order.countDocuments((count) => count)
+    const orderCount = await this.Order.countDocuments();
     if (!orderCount) {
       this.respons({
         res,
