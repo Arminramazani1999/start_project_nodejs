@@ -12,7 +12,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname + "/public"));
 
 //db
-mongoose.connect(config.get("db.address"));
+mongoose.connect(process.env.DB_URL);
 
 app.use("/api", router);
 

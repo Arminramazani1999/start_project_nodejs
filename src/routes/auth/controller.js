@@ -45,7 +45,7 @@ class AuthController extends controller {
         message: "ایمیل یا پسورد اشتباه است",
       });
     }
-    const token = jwt.sign({ _id: user.id }, config.get("jwt_key"), {
+    const token = jwt.sign({ _id: user.id }, process.env.JWT_KEY, {
       expiresIn: "1d",
     });
     console.log(token);
