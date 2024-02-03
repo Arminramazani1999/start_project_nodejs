@@ -1,7 +1,3 @@
 {
-  "name": "start_project",
-  "db": {
-    "address": "mongodb://127.0.0.1:27017/projectstart"
-  },
-  "jwt_key": "vnzlhfa2454rfadfwef7sndjva58taualvlur2ao6ufzlvgf"
+  "name": "start_project"
 }
