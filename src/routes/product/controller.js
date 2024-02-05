@@ -1,4 +1,4 @@
-const controller = require("./../contriller");
+const controller = require("../controller");
 // const User = require("models/user");
 const { validationResult } = require("express-validator");
 const passport = require("passport");
@@ -6,12 +6,12 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const config = require("config");
 
-class AuthController extends controller {
+class ProductController extends controller {
   // create
   async create(req, res) {
     const category = await this.Category.findOne({ id: req.body.id });
     if (!category) {
-      return this.respons({
+      return this.response({
         res,
         code: 400,
         message: "دسته بندی وجود ندارد",
@@ -19,7 +19,7 @@ class AuthController extends controller {
     }
     let product = await this.Product.findOne({ title: req.body.title });
     if (product) {
-      return this.respons({
+      return this.response({
         res,
         code: 400,
         message: "محصول قبلا وجود دارد",
@@ -40,7 +40,7 @@ class AuthController extends controller {
     });
 
     await product.save();
-    this.respons({
+    this.response({
       res,
       message: "با موفقیت ثبت شد",
       data: { product },
@@ -52,17 +52,15 @@ class AuthController extends controller {
     const pageSize = 2;
     const search = req.query.search || "";
 
-    // let product = await this.Product.find().populate('Category').sort({'dateOrdered'})
-
     let product = await this.Product.find({
       title: { $regex: search, $options: "i" },
     })
       .populate("category")
-      .sort({"createdAt" : -1})
+      .sort({ createdAt: -1 })
       .skip((pageNumber - 1) * pageSize)
       .limit(pageSize);
 
-    this.respons({
+    this.response({
       res,
       message: "",
       data: { product },
@@ -72,7 +70,7 @@ class AuthController extends controller {
   async seeOne(req, res) {
     let product = await this.Product.findById(req.params.id);
     if (!product) {
-      this.respons({
+      this.response({
         res,
         code: 404,
         message: " محصول وجود ندارد",
@@ -81,7 +79,7 @@ class AuthController extends controller {
     // view++
     product.view += 1;
     await product.save();
-    this.respons({
+    this.response({
       res,
       message: "",
       data: { product },
@@ -91,14 +89,14 @@ class AuthController extends controller {
   async delete(req, res) {
     let product = await this.Product.findById(req.params.id);
     if (!product) {
-      this.respons({
+      this.response({
         res,
         code: 404,
         message: " محصول وجود ندارد",
       });
     }
     product = await this.Product.findByIdAndDelete(req.params.id);
-    this.respons({
+    this.response({
       res,
       message: " محصول حذف شد",
       data: { product },
@@ -108,7 +106,7 @@ class AuthController extends controller {
   async update(req, res) {
     let product = await this.Product.findById(req.params.id);
     if (!product) {
-      this.respons({
+      this.response({
         res,
         code: 404,
         message: " محصول وجود ندارد",
@@ -118,7 +116,7 @@ class AuthController extends controller {
       new: true,
       runValidators: true,
     });
-    this.respons({
+    this.response({
       res,
       message: " محصول حذف شد",
       data: { product },
@@ -126,9 +124,9 @@ class AuthController extends controller {
   }
 
   async getCount(req, res) {
-    const productCount = await this.Product.countDocuments((count) => count);
+    const productCount = await this.Product.countDocuments();
     if (!productCount) {
-      this.respons({
+      this.response({
         res,
         code: 404,
         message: " محصولی وجود ندارد",
@@ -139,16 +137,16 @@ class AuthController extends controller {
     });
   }
   async getFeatured(req, res) {
-    const count = req.params.count ? req.params.count : 0;
+    const count = req.query.count ? req.query.count : 0;
     const product = await this.Product.find({ isFeatured: true }).limit(+count);
     if (!product) {
-      this.respons({
+      this.response({
         res,
         code: 404,
         message: " محصول برجسته ای وجود ندارد",
       });
     }
-    this.respons({
+    this.response({
       res,
       message: "محصولات برجسته",
       data: { product },
@@ -156,4 +154,4 @@ class AuthController extends controller {
   }
 }
 
-module.exports = new AuthController();
+module.exports = new ProductController();

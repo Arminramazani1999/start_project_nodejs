@@ -1,11 +1,11 @@
-const controller = require("./../contriller");
+const controller = require("../controller");
 const path = require("path");
 // const User = require("models/user");
 const { validationResult } = require("express-validator");
-class AuthController extends controller {
+
+class OrderController extends controller {
   // create
   async create(req, res) {
-    // console.log(req.body);
     const orderItemIds = Promise.all(
       req.body.orderItem.map(async (orderItem) => {
         let newOrderItem = new this.OrderItem({
@@ -43,11 +43,8 @@ class AuthController extends controller {
       totalPrice: totalPrice,
       user: req.body.user,
     });
-    console.log("oooooooooooooooooooooooooooooooooooooooooo");
     await order.save();
-    console.log(order);
-
-    this.respons({
+    this.response({
       res,
       message: "با موفقیت ثبت شد",
       data: order,
@@ -60,14 +57,14 @@ class AuthController extends controller {
       .populate({ path: "orderItem", populate: "product" })
       .sort({ dateOrdered: -1 });
     if (!orderList) {
-      this.respons({
+      this.response({
         res,
         code: 404,
         message: "سفارشی وجود ندارد",
       });
     }
 
-    this.respons({
+    this.response({
       res,
       message: "All:",
       data: { orderList },
@@ -83,13 +80,13 @@ class AuthController extends controller {
       },
     ]);
     if (!order) {
-      this.respons({
+      this.response({
         res,
         code: 404,
         message: "سفارشی وجود ندارد",
       });
     }
-    this.respons({
+    this.response({
       res,
       message: "",
       data: { order },
@@ -99,7 +96,7 @@ class AuthController extends controller {
   async delete(req, res) {
     let order = await this.Order.findById(req.params.id);
     if (!order) {
-      this.respons({
+      this.response({
         res,
         code: 404,
         message: "سفارشی وجود ندارد",
@@ -112,7 +109,7 @@ class AuthController extends controller {
         });
       }
     );
-    this.respons({
+    this.response({
       res,
       message: " سفارش حذف شد",
       data: { order },
@@ -124,7 +121,7 @@ class AuthController extends controller {
       { $group: { _id: null, totalsales: { $sum: "$totalPrice" } } },
     ]);
     if (!totalSales) {
-      this.respons({
+      this.response({
         res,
         code: 400,
         message: "The order sales connot be generated",
@@ -138,7 +135,7 @@ class AuthController extends controller {
   async getCount(req, res) {
     const orderCount = await this.Order.countDocuments();
     if (!orderCount) {
-      this.respons({
+      this.response({
         res,
         code: 500,
         message: " سفارشی وجود ندارد",
@@ -159,7 +156,7 @@ class AuthController extends controller {
       ])
       .sort({ dateOrdered: -1 });
     if (!userOrderList) {
-      this.respons({
+      this.response({
         res,
         code: 500,
         message: " سفارشی وجود ندارد",
@@ -174,7 +171,7 @@ class AuthController extends controller {
   async update(req, res) {
     let order = await this.Order.findById(req.params.id);
     if (!order) {
-      this.respons({
+      this.response({
         res,
         code: 404,
         message: "سفارشی وجود ندارد",
@@ -190,7 +187,7 @@ class AuthController extends controller {
         runValidators: true,
       }
     );
-    this.respons({
+    this.response({
       res,
       message: "سفارش بروز شد",
       data: { order },
@@ -198,4 +195,4 @@ class AuthController extends controller {
   }
 }
 
-module.exports = new AuthController();
+module.exports = new OrderController();

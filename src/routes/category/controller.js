@@ -1,15 +1,13 @@
-const controller = require("./../contriller");
+const controller = require("../controller");
 // const User = require("models/user");
 const { validationResult } = require("express-validator");
-class AuthController extends controller {
+
+class CategoryController extends controller {
   // create
   async create(req, res) {
-    console.log("cat");
     let category = await this.Category.findOne({ title: req.body.title });
-    console.log(category)
     if (category) {
-      console.log("cat2");
-      return this.respons({
+      return this.response({
         res,
         code: 400,
         message: "دسته بندی قبلا وجود دارد",
@@ -21,17 +19,16 @@ class AuthController extends controller {
       img: req.body.img,
     });
     await category.save();
-    console.log(category)
-    this.respons({
+    this.response({
       res,
       message: "با موفقیت ثبت نام شد",
-      data:  category,
+      data: category,
     });
   }
   // show all
   async getAll(req, res) {
     let category = await this.Category.find({});
-    this.respons({
+    this.response({
       res,
       message: "All:",
       data: { category },
@@ -41,13 +38,13 @@ class AuthController extends controller {
   async seeOne(req, res) {
     let category = await this.Category.findById(req.params.id);
     if (!category) {
-      this.respons({
+      this.response({
         res,
         code: 404,
         message: "دسته بندی وجود ندارد",
       });
     }
-    this.respons({
+    this.response({
       res,
       message: "",
       data: { category },
@@ -57,14 +54,14 @@ class AuthController extends controller {
   async delete(req, res) {
     let category = await this.Category.findById(req.params.id);
     if (!category) {
-      this.respons({
+      this.response({
         res,
         code: 404,
         message: "دسته بندی وجود ندارد",
       });
     }
     category = await this.Category.findByIdAndDelete(req.params.id);
-    this.respons({
+    this.response({
       res,
       message: "دسته بندی حذف شد",
       data: { category },
@@ -74,7 +71,7 @@ class AuthController extends controller {
   async update(req, res) {
     let category = await this.Category.findById(req.params.id);
     if (!category) {
-      this.respons({
+      this.response({
         res,
         code: 404,
         message: "دسته بندی وجود ندارد",
@@ -84,7 +81,7 @@ class AuthController extends controller {
       new: true,
       runValidators: true,
     });
-    this.respons({
+    this.response({
       res,
       message: "دسته بندی حذف شد",
       data: { category },
@@ -92,4 +89,4 @@ class AuthController extends controller {
   }
 }
 
-module.exports = new AuthController();
+module.exports = new CategoryController();

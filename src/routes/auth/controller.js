@@ -7,39 +7,11 @@ const bcrypt = require("bcryptjs");
 const config = require("config");
 
 class AuthController extends controller {
-  async register(req, res) {
-    let user = await this.User.findOne({ email: req.body.email }); // email = req.body.email
-    if (user) {
-      return this.respons({
-        res,
-        code: 400,
-        message: "یوزر قبلا وجود دارد",
-      });
-    }
-    user = new this.User({
-      name: req.body.name,
-      email: req.body.email,
-      password: bcrypt.hashSync(req.body.password, 8), //پسور را هش میکنیم یعنی به چند تا حروف و عدد رندوم تبدیل میکند
-      img: req.body.img,
-    });
-
-    await user.save();
-    this.respons({
-      res,
-      message: "با موفقیت ثبت نام شد",
-      data: {
-        name: user.name,
-        id: user.id,
-        email: user.email,
-      },
-    });
-  }
-
   // login
   async login(req, res) {
     let user = await this.User.findOne({ email: req.body.email });
     if (!user || !bcrypt.compareSync(req.body.password, user.password)) {
-      return this.respons({
+      return this.response({
         res,
         code: 400,
         message: "ایمیل یا پسورد اشتباه است",
@@ -48,8 +20,7 @@ class AuthController extends controller {
     const token = jwt.sign({ _id: user.id }, process.env.JWT_KEY, {
       expiresIn: "1d",
     });
-    console.log(token);
-    this.respons({
+    this.response({
       res,
       message: "یوزر لاگین شد",
       data: { token },
@@ -59,7 +30,7 @@ class AuthController extends controller {
   // show all
   async getAll(req, res) {
     let user = await this.User.find({});
-    this.respons({
+    this.response({
       res,
       message: "All:",
       data: { user },
@@ -69,13 +40,13 @@ class AuthController extends controller {
   async seeOne(req, res) {
     let user = await this.User.findById(req.params.id);
     if (!user) {
-      this.respons({
+      this.response({
         res,
         code: 404,
         message: "کاربر وجود ندارد",
       });
     }
-    this.respons({
+    this.response({
       res,
       message: "",
       data: { user },
@@ -85,14 +56,14 @@ class AuthController extends controller {
   async delete(req, res) {
     let user = await this.User.findById(req.params.id);
     if (!user) {
-      this.respons({
+      this.response({
         res,
         code: 404,
         message: "کاربر وجود ندارد",
       });
     }
     user = await this.User.findByIdAndDelete(req.params.id);
-    this.respons({
+    this.response({
       res,
       message: "کاربر حذف شد",
       data: { user },
@@ -102,7 +73,7 @@ class AuthController extends controller {
   async update(req, res) {
     let user = await this.User.findById(req.params.id);
     if (!user) {
-      this.respons({
+      this.response({
         res,
         code: 404,
         message: "کاربر وجود ندارد",
@@ -112,7 +83,7 @@ class AuthController extends controller {
       new: true,
       runValidators: true,
     });
-    this.respons({
+    this.response({
       res,
       message: "کاربر حذف شد",
       data: { user },
