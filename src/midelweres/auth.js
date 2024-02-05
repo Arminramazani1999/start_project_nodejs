@@ -11,7 +11,6 @@ async function isLoggined(req, res, next) {
   try {
     const decoded = jwt.verify(token, config.get("jwt_key"));
     const user = await User.findById(decoded._id);
-    console.log(user);
     req.user = user;
     next();
   } catch (ex) {

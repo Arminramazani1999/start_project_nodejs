@@ -11,7 +11,6 @@ router.post(
   uploadImages.single("img"),
   (req, res, next) => {
     if (!req.file) {
-      console.log("yes");
       req.body.img = null;
     } else {
       req.body.img = req.file.filename;
