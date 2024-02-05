@@ -27,7 +27,7 @@ router.put("/:id", controller.update);
 // count
 router.get("/get/count", controller.getCount);
 // geting featured
-router.get("/get/featured/:count", controller.getFeatured);
+router.get("/get/featured", controller.getFeatured);
 
 
 //--------all_user------
